@@ -51,16 +51,26 @@ class SimpleShader {
     }
 }
 
-function loadAndCompileShader(id: string, shaderType: GLenum): WebGLShader {
-    let shaderSource = null;
+function loadAndCompileShader(filePath: string, shaderType: GLenum): WebGLShader {
+    let shaderSource: string|null = null;
     let compiledShader = null; 
     let gl = core.getGL();
     if (gl == null) {
         throw new Error("No WebGL2RenderingContext in SimpleShader.loadAndCompileShader.");
     }
     // Step A: get the shader source
-    let shaderText: HTMLElement|null = document.getElementById(id);
-    shaderSource = shaderText?.firstChild?.textContent;
+    let xmlReq = new XMLHttpRequest();
+    xmlReq.open('GET', filePath, false);
+    try {
+        xmlReq.send();
+    } catch (error) {
+        throw new Error("Failed to load shader: "
+            + filePath
+            + " [Hint: you cannot double click to run this project. "
+            + " The index.html file must be loaded by a web server.]");
+    }
+
+    shaderSource = xmlReq.responseText;
     if (shaderSource == null || shaderSource === undefined) {
         throw new Error("shaderSource cannot be null or undefined");
     }

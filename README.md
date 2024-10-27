@@ -11,6 +11,7 @@ IDE Setup
 4. npm install typescript --save-dev
 ## need something to host
 5. npm install http-server -g
+6. Installed the extension "Shader languages support for VS Code"
 
 Initial Project Setup
 1. git init
@@ -29,3 +30,6 @@ Initial Project Setup
 https://www.totaltypescript.com/tsconfig-cheat-sheet
 
 http-server
+
+# Interesting resources
+https://web.archive.org/web/20180301041827/https://prideout.net/archive/colors.php

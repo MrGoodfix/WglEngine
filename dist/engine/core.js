@@ -9,7 +9,7 @@ function getGL() {
 }
 let mShader;
 function createShader() {
-    mShader = new SimpleShader("VertexShader", "FragmentShader");
+    mShader = new SimpleShader("dist/glsl_shaders/simple_vs.glsl", "dist/glsl_shaders/white_fs.glsl");
 }
 // initialize the WebGL
 function initWebGL(htmlCanvasID) {
@@ -34,6 +34,8 @@ function clearCanvas(color) {
 }
 function drawSquare() {
     mShader.activate();
+    // tribal knowledge... this is tightly coupled to vertex_buffer...
+    // knowing that our square's vertices are in positions 0 - 3 in the array.
     mGL?.drawArrays(mGL.TRIANGLE_STRIP, 0, 4);
 }
 export { getGL, init, clearCanvas, drawSquare };

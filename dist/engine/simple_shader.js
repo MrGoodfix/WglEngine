@@ -40,7 +40,7 @@ class SimpleShader {
         gl.enableVertexAttribArray(this.mVertexPositionRef);
     }
 }
-function loadAndCompileShader(id, shaderType) {
+function loadAndCompileShader(filePath, shaderType) {
     let shaderSource = null;
     let compiledShader = null;
     let gl = core.getGL();
@@ -48,8 +48,18 @@ function loadAndCompileShader(id, shaderType) {
         throw new Error("No WebGL2RenderingContext in SimpleShader.loadAndCompileShader.");
     }
     // Step A: get the shader source
-    let shaderText = document.getElementById(id);
-    shaderSource = shaderText?.firstChild?.textContent;
+    let xmlReq = new XMLHttpRequest();
+    xmlReq.open('GET', filePath, false);
+    try {
+        xmlReq.send();
+    }
+    catch (error) {
+        throw new Error("Failed to load shader: "
+            + filePath
+            + " [Hint: you cannot double click to run this project. "
+            + " The index.html file must be loaded by a web server.]");
+    }
+    shaderSource = xmlReq.responseText;
     if (shaderSource == null || shaderSource === undefined) {
         throw new Error("shaderSource cannot be null or undefined");
     }
