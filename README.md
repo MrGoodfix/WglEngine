@@ -20,18 +20,23 @@ https://github.com/Apress/build-your-own-2d-game-engine-2e
 3. vscode command pallette "Configure tasks"
     - Create tasks.json from template
     - Others
+4. added vite after the fact
+    - npm install vite --save-dev
+    - copy or manually create files following vite documentation
 
 # Compile
-## global typescript
-- tsc
-## project typescript
-- npx tsc
+npx vite build
 
 # Running
-- Use the VS Code extension "LiveServer" (click the "Go Live" button in the lower right)
+- npx vite
+or 
+- npm run dev
 
 # tsconfig stuff
 https://www.totaltypescript.com/tsconfig-cheat-sheet
 
 # Interesting resources
+https://www.geeksforgeeks.org/getting-started-with-vite/
 https://web.archive.org/web/20180301041827/https://prideout.net/archive/colors.php
+
+i need to fix the issue with overriding types
