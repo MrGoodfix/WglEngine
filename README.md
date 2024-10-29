@@ -25,6 +25,7 @@ https://github.com/Apress/build-your-own-2d-game-engine-2e
     - copy or manually create files following vite documentation
 
 # Compile
+first time, npm install
 npx vite build
 
 # Running
