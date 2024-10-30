@@ -6,6 +6,7 @@ class SimpleShader {
     private mVertexShader: WebGLShader;
     private mFragmentShader: WebGLShader;
     private mVertexPositionRef: GLint;
+    private mPixelColorRef: WebGLUniformLocation;
 
     constructor(vertexShaderID: string, fragmentShaderID: string) {
         let gl = core.getGL();
@@ -31,9 +32,16 @@ class SimpleShader {
         }
 
         this.mVertexPositionRef = gl.getAttribLocation(this.mCompiledShader, "aVertexPosition");
+
+        let pixelColor = gl.getUniformLocation(this.mCompiledShader, "uPixelColor");
+        
+        if (pixelColor == null) {
+            throw new Error("SimpleShader could not access uniform location for uPixelColor.");
+        }
+        this.mPixelColorRef = pixelColor;
     }
 
-    activate(): void  {
+    activate(pixelColor: Iterable<GLfloat>): void  {
         let gl = core.getGL();
         if (gl == null) {
             throw new Error("No WebGL2RenderingContext in SimpleShader constructor.");
@@ -48,6 +56,8 @@ class SimpleShader {
             0,              // number of bytes to skip in between elements
             0);             // offsets to the first element
         gl.enableVertexAttribArray(this.mVertexPositionRef);
+
+        gl.uniform4fv(this.mPixelColorRef, pixelColor);
     }
 }
 

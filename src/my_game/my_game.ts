@@ -21,7 +21,7 @@ class MyGame {
         engine.clearCanvas(color);
 
         // Step C: Draw the square
-        engine.drawSquare();
+        engine.drawSquare([1, 0, 0, 1]);
     }
 }
 
