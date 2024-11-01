@@ -4,7 +4,7 @@ let mGLVertexBuffer: WebGLBuffer|null;
 
 function get(): WebGLBuffer|null { return mGLVertexBuffer; }
 
-let mVerticesOfSquare: number[] = [
+const mVerticesOfSquare: number[] = [
     0.5, 0.5, 0.0,
     -0.5, 0.5, 0.0,
     0.5, -0.5, 0.0,
@@ -12,7 +12,7 @@ let mVerticesOfSquare: number[] = [
 ];
 
 function init(): void {
-    let gl = glSys.get();
+    const gl = glSys.get();
 
     if (gl != null) {
         mGLVertexBuffer = gl.createBuffer();

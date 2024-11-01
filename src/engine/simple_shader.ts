@@ -9,7 +9,7 @@ class SimpleShader {
     private mPixelColorRef: WebGLUniformLocation;
 
     constructor(vertexShaderID: string, fragmentShaderID: string) {
-        let gl = glSys.get();
+        const gl = glSys.get();
         if (gl == null) {
             throw new Error("No WebGL2RenderingContext in SimpleShader constructor.");
         }
@@ -17,7 +17,7 @@ class SimpleShader {
         this.mVertexShader = loadAndCompileShader(vertexShaderID, gl.VERTEX_SHADER);
         this.mFragmentShader = loadAndCompileShader(fragmentShaderID, gl.FRAGMENT_SHADER);
         
-        let program = gl.createProgram();
+        const program = gl.createProgram();
         if (program == null) {
             throw new Error("Failed to create program in SimpleShader.");
         }
@@ -33,7 +33,7 @@ class SimpleShader {
 
         this.mVertexPositionRef = gl.getAttribLocation(this.mCompiledShader, "aVertexPosition");
 
-        let pixelColor = gl.getUniformLocation(this.mCompiledShader, "uPixelColor");
+        const pixelColor = gl.getUniformLocation(this.mCompiledShader, "uPixelColor");
         
         if (pixelColor == null) {
             throw new Error("SimpleShader could not access uniform location for uPixelColor.");
@@ -42,7 +42,7 @@ class SimpleShader {
     }
 
     activate(pixelColor: Iterable<GLfloat>): void  {
-        let gl = glSys.get();
+        const gl = glSys.get();
         if (gl == null) {
             throw new Error("No WebGL2RenderingContext in SimpleShader constructor.");
         }
@@ -64,16 +64,16 @@ class SimpleShader {
 function loadAndCompileShader(filePath: string, shaderType: GLenum): WebGLShader {
     let shaderSource: string|null = null;
     let compiledShader = null; 
-    let gl = glSys.get();
+    const gl = glSys.get();
     if (gl == null) {
         throw new Error("No WebGL2RenderingContext in SimpleShader.loadAndCompileShader.");
     }
     // Step A: get the shader source
-    let xmlReq = new XMLHttpRequest();
+    const xmlReq = new XMLHttpRequest();
     xmlReq.open('GET', filePath, false);
     try {
         xmlReq.send();
-    } catch (error) {
+    } catch {
         throw new Error("Failed to load shader: "
             + filePath
             + " [Hint: you cannot double click to run this project. "

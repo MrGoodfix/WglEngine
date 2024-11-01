@@ -23,10 +23,15 @@ https://github.com/Apress/build-your-own-2d-game-engine-2e
 4. added vite after the fact
     - npm install vite --save-dev
     - copy or manually create files following vite documentation
+5. eslint
+    - npm init @eslint/config@latest
+
+# Linting
+- npx eslint src
 
 # Compile
-first time, npm install
-npx vite build
+- npm install
+- npx vite build
 
 # Running
 - npx vite

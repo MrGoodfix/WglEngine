@@ -24,8 +24,8 @@ class MyGame {
         this.mRedSq.setColor(new RgbaColor(1,0,0,1));
 
         // Step C: Clear the canvas
-        let color: RgbaColor = new engine.RgbaColor(0, 0.8, 0, 1);
-        engine.clearCanvas(color);
+        const greenish: RgbaColor = new engine.RgbaColor(0, 0.8, 0, 1);
+        engine.clearCanvas(greenish);
 
         // Step C: Draw the square
         this.mWhiteSq.draw();

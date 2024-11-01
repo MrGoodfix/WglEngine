@@ -11,7 +11,7 @@ function init(htmlCanvasID:string) {
 }
 
 function clearCanvas(color: RgbaColor) {
-    let gl = glSys.get();
+    const gl = glSys.get();
     gl.clearColor(
         color.getRed(),
         color.getGreen(),

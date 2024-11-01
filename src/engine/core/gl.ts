@@ -10,13 +10,13 @@ function get(): WebGL2RenderingContext
 
 // initialize the WebGL
 function init(htmlCanvasID: string) {
-    let canvas: HTMLCanvasElement|null = document.getElementById(htmlCanvasID) as HTMLCanvasElement;
+    mCanvas = document.getElementById(htmlCanvasID) as HTMLCanvasElement;
 
-    if (canvas == null) {
+    if (mCanvas == null) {
         throw new Error("There is no canvas.");
     }
 
-    mGL = canvas.getContext("webgl2") as WebGL2RenderingContext;
+    mGL = mCanvas.getContext("webgl2") as WebGL2RenderingContext;
 
     if (mGL === null) {
         document.write("<br><b>WebGL 2 is not supported!</b>");

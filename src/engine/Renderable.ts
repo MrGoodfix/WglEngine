@@ -13,7 +13,7 @@ class Renderable {
     }
 
     draw():void {
-        let gl = glSys.get();
+        const gl = glSys.get();
         this.mShader.activate(this.mColor.asIterable());
         gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
     }
