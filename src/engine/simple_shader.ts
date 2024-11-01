@@ -1,5 +1,5 @@
-import * as core from "./core.js";
-import * as vertexBuffer from "./vertex_buffer.js";
+import * as glSys from "./core/gl";
+import * as vertexBuffer from "./core/vertex_buffer";
 
 class SimpleShader {
     private mCompiledShader: WebGLShader;
@@ -9,7 +9,7 @@ class SimpleShader {
     private mPixelColorRef: WebGLUniformLocation;
 
     constructor(vertexShaderID: string, fragmentShaderID: string) {
-        let gl = core.getGL();
+        let gl = glSys.get();
         if (gl == null) {
             throw new Error("No WebGL2RenderingContext in SimpleShader constructor.");
         }
@@ -42,7 +42,7 @@ class SimpleShader {
     }
 
     activate(pixelColor: Iterable<GLfloat>): void  {
-        let gl = core.getGL();
+        let gl = glSys.get();
         if (gl == null) {
             throw new Error("No WebGL2RenderingContext in SimpleShader constructor.");
         }
@@ -64,7 +64,7 @@ class SimpleShader {
 function loadAndCompileShader(filePath: string, shaderType: GLenum): WebGLShader {
     let shaderSource: string|null = null;
     let compiledShader = null; 
-    let gl = core.getGL();
+    let gl = glSys.get();
     if (gl == null) {
         throw new Error("No WebGL2RenderingContext in SimpleShader.loadAndCompileShader.");
     }

@@ -1,4 +1,4 @@
-import * as core from "./core.js";
+import * as glSys from "./gl";
 
 let mGLVertexBuffer: WebGLBuffer|null;
 
@@ -12,7 +12,7 @@ let mVerticesOfSquare: number[] = [
 ];
 
 function init(): void {
-    let gl = core.getGL();
+    let gl = glSys.get();
 
     if (gl != null) {
         mGLVertexBuffer = gl.createBuffer();

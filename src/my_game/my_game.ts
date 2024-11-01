@@ -4,24 +4,33 @@
  */
 "use strict";  // Operate in Strict mode such that variables must be declared before used!
 
-import * as engine from "../engine/core.js";
+import engine from "../engine/index";
+import Renderable from "../engine/Renderable";
+import RgbaColor from "../engine/RgbaColor";
 
 class MyGame {
+    private mWhiteSq: Renderable;
+    private mRedSq: Renderable;
+
     constructor(htmlCanvasID: string) {
         // Step A: Initialize the game engine
         engine.init(htmlCanvasID);
 
-        // Step B: Clear the canvas
-        let color: engine.RgbaColor = {
-            Red : 0,
-            Green : 0.8,
-            Blue : 0,
-            Alpha : 1
-        }
+        // Create renderable objects
+        this.mWhiteSq = new engine.Renderable();
+        this.mWhiteSq.setColor(new RgbaColor(1,1,1,1));
+
+        this.mRedSq = new engine.Renderable();
+        this.mRedSq.setColor(new RgbaColor(1,0,0,1));
+
+        // Step C: Clear the canvas
+        let color: RgbaColor = new engine.RgbaColor(0, 0.8, 0, 1);
         engine.clearCanvas(color);
 
         // Step C: Draw the square
-        engine.drawSquare([1, 0, 0, 1]);
+        this.mWhiteSq.draw();
+
+        this.mRedSq.draw();
     }
 }
 
