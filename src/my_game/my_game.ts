@@ -5,8 +5,8 @@
 "use strict";  // Operate in Strict mode such that variables must be declared before used!
 
 import engine from "../engine/index";
-import Renderable from "../engine/Renderable";
-import RgbaColor from "../engine/RgbaColor";
+import Renderable from "../engine/renderable";
+import RgbaColor from "../engine/rgba_color";
 
 class MyGame {
     private mWhiteSq: Renderable;

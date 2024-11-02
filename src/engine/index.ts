@@ -1,8 +1,8 @@
 import * as glSys from "./core/gl"
 import * as vertexBuffer from "./core/vertex_buffer"
 import * as shaderResources from "./core/shader_resources"
-import RgbaColor from "./RgbaColor";
-import Renderable from "./Renderable";
+import RgbaColor from "./rgba_color";
+import Renderable from "./renderable";
 
 function init(htmlCanvasID:string) {
     glSys.init(htmlCanvasID);

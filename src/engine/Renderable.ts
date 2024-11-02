@@ -1,6 +1,6 @@
 import * as glSys from "./core/gl"
 import * as shaderResources from "./core/shader_resources"
-import RgbaColor from "./RgbaColor";
+import RgbaColor from "./rgba_color";
 import SimpleShader from "./simple_shader";
 
 class Renderable {
