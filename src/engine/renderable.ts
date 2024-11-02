@@ -2,6 +2,7 @@ import * as glSys from "./core/gl"
 import * as shaderResources from "./core/shader_resources"
 import RgbaColor from "./rgba_color";
 import SimpleShader from "./simple_shader";
+import { mat4 } from "gl-matrix";
 
 class Renderable {
     private mShader: SimpleShader;
@@ -12,9 +13,9 @@ class Renderable {
         this.mColor = new RgbaColor(1,1,1,1);
     }
 
-    draw(trsMatrix: Iterable<GLfloat>):void {
+    draw(trsMatrix: mat4):void {
         const gl = glSys.get();
-        this.mShader.activate(this.mColor.asIterable(), trsMatrix);
+        this.mShader.activate(this.mColor, trsMatrix);
         gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
     }
 

@@ -1,34 +1,26 @@
-class RgbaColor {
-    private mRed: GLfloat;
-    private mGreen: GLfloat;
-    private mBlue: GLfloat;
-    private mAlpha: GLfloat;
-
+class RgbaColor extends Float32Array {
     constructor(red: GLfloat, green: GLfloat, blue: GLfloat, alpha: GLfloat) {
-        this.mRed = red;
-        this.mGreen = green;
-        this.mBlue = blue;
-        this.mAlpha = alpha;
+        super(4);
+        this[0] = red;
+        this[1] = green;
+        this[2] = blue;
+        this[3] = alpha;
     }
 
     getRed():GLfloat{
-        return this.mRed;
+        return <GLfloat>this[0];
     }
 
     getGreen():GLfloat{
-        return this.mGreen;
+        return <GLfloat>this[1];
     }
 
     getBlue():GLfloat{
-        return this.mBlue;
+        return <GLfloat>this[2];
     }
 
     getAlpha():GLfloat{
-        return this.mAlpha;
-    }
-
-    asIterable():Iterable<GLfloat> {
-        return [this.mRed, this.mGreen, this.mBlue, this.mAlpha];
+        return <GLfloat>this[3];
     }
 }
 
