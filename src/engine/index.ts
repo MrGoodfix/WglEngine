@@ -3,6 +3,7 @@ import * as vertexBuffer from "./core/vertex_buffer"
 import * as shaderResources from "./core/shader_resources"
 import RgbaColor from "./rgba_color";
 import Renderable from "./renderable";
+import Transform from "./transform";
 
 function init(htmlCanvasID:string) {
     glSys.init(htmlCanvasID);
@@ -24,5 +25,6 @@ function clearCanvas(color: RgbaColor) {
 export default {
     Renderable,
     RgbaColor,
+    Transform,
     init, clearCanvas
 }

@@ -7,8 +7,6 @@
 import engine from "../engine/index";
 import Renderable from "../engine/renderable";
 import RgbaColor from "../engine/rgba_color";
-import { mat4 } from 'gl-matrix';
-import { vec3 } from "gl-matrix";
 
 class MyGame {
     private mWhiteSq: Renderable;
@@ -29,20 +27,17 @@ class MyGame {
         const greenish: RgbaColor = new engine.RgbaColor(0, 0.8, 0, 1);
         engine.clearCanvas(greenish);
 
-        const trsMatrix: mat4 = mat4.create();
-
         // Step C1: Draw the white square
-        mat4.translate(trsMatrix, trsMatrix, vec3.fromValues(-0.25, 0.25, 0.0));
-        mat4.rotateZ(trsMatrix, trsMatrix, 0.2);
-        mat4.scale(trsMatrix, trsMatrix, vec3.fromValues(1.2, 1.2, 1.0));
-        this.mWhiteSq.draw(trsMatrix);
+        this.mWhiteSq.getXform().setPosition(-0.25, 0.25);
+        this.mWhiteSq.getXform().setRotationInRad(0.2);
+        this.mWhiteSq.getXform().setSize(1.2, 1.2);
+        this.mWhiteSq.draw();
         
         // Step C2: Draw the red square
-        mat4.identity(trsMatrix);
-        mat4.translate(trsMatrix, trsMatrix, vec3.fromValues(0.25, -0.25, 0.0));
-        mat4.rotateZ(trsMatrix, trsMatrix, -0.785);
-        mat4.scale(trsMatrix, trsMatrix, vec3.fromValues(0.4, 0.4, 1.0));
-        this.mRedSq.draw(trsMatrix);
+        this.mRedSq.getXform().setPosition(0.25, -0.25);
+        this.mRedSq.getXform().setRotationInRad(-0.785);
+        this.mRedSq.getXform().setSize(0.4, 0.4);
+        this.mRedSq.draw();
     }
 }
 
