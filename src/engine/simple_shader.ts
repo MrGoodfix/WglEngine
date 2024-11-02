@@ -7,6 +7,7 @@ class SimpleShader {
     private mFragmentShader: WebGLShader;
     private mVertexPositionRef: GLint;
     private mPixelColorRef: WebGLUniformLocation;
+    private mModelMatrixRef: WebGLUniformLocation;
 
     constructor(vertexShaderID: string, fragmentShaderID: string) {
         const gl = glSys.get();
@@ -33,15 +34,23 @@ class SimpleShader {
 
         this.mVertexPositionRef = gl.getAttribLocation(this.mCompiledShader, "aVertexPosition");
 
-        const pixelColor = gl.getUniformLocation(this.mCompiledShader, "uPixelColor");
+        const pixelColorRef = gl.getUniformLocation(this.mCompiledShader, "uPixelColor");
         
-        if (pixelColor == null) {
+        if (pixelColorRef == null) {
             throw new Error("SimpleShader could not access uniform location for uPixelColor.");
         }
-        this.mPixelColorRef = pixelColor;
+        this.mPixelColorRef = pixelColorRef;
+
+        const modelMatrixRef = gl.getUniformLocation(this.mCompiledShader, "uModelXformMatrix");
+
+        if (modelMatrixRef == null) {
+            throw new Error("SimpleShader could not access uniform location for uModelXformMatrix.");
+        }
+
+        this.mModelMatrixRef = modelMatrixRef;
     }
 
-    activate(pixelColor: Iterable<GLfloat>): void  {
+    activate(pixelColor: Iterable<GLfloat>, trsMatrix: Iterable<GLfloat>): void  {
         const gl = glSys.get();
         if (gl == null) {
             throw new Error("No WebGL2RenderingContext in SimpleShader constructor.");
@@ -58,6 +67,7 @@ class SimpleShader {
         gl.enableVertexAttribArray(this.mVertexPositionRef);
 
         gl.uniform4fv(this.mPixelColorRef, pixelColor);
+        gl.uniformMatrix4fv(this.mModelMatrixRef, false, trsMatrix);
     }
 }
 

@@ -7,6 +7,7 @@
 import engine from "../engine/index";
 import Renderable from "../engine/renderable";
 import RgbaColor from "../engine/rgba_color";
+import * as matrix from 'gl-matrix'
 
 class MyGame {
     private mWhiteSq: Renderable;
@@ -16,7 +17,7 @@ class MyGame {
         // Step A: Initialize the game engine
         engine.init(htmlCanvasID);
 
-        // Create renderable objects
+        // Step B: Create renderable objects
         this.mWhiteSq = new engine.Renderable();
         this.mWhiteSq.setColor(new RgbaColor(1,1,1,1));
 
@@ -27,10 +28,20 @@ class MyGame {
         const greenish: RgbaColor = new engine.RgbaColor(0, 0.8, 0, 1);
         engine.clearCanvas(greenish);
 
-        // Step C: Draw the square
-        this.mWhiteSq.draw();
+        const trsMatrix: matrix.mat4 = matrix.mat4.create();
 
-        this.mRedSq.draw();
+        // Step C1: Draw the white square
+        matrix.mat4.translate(trsMatrix, trsMatrix, matrix.vec3.fromValues(-0.25, 0.25, 0.0));
+        matrix.mat4.rotateZ(trsMatrix, trsMatrix, 0.2);
+        matrix.mat4.scale(trsMatrix, trsMatrix, matrix.vec3.fromValues(1.2, 1.2, 1.0));
+        this.mWhiteSq.draw(trsMatrix);
+        
+        // Step C2: Draw the red square
+        matrix.mat4.identity(trsMatrix);
+        matrix.mat4.translate(trsMatrix, trsMatrix, matrix.vec3.fromValues(0.25, -0.25, 0.0));
+        matrix.mat4.rotateZ(trsMatrix, trsMatrix, -0.785);
+        matrix.mat4.scale(trsMatrix, trsMatrix, matrix.vec3.fromValues(0.4, 0.4, 1.0));
+        this.mRedSq.draw(trsMatrix);
     }
 }
 

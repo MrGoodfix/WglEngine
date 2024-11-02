@@ -12,9 +12,9 @@ class Renderable {
         this.mColor = new RgbaColor(1,1,1,1);
     }
 
-    draw():void {
+    draw(trsMatrix: Iterable<GLfloat>):void {
         const gl = glSys.get();
-        this.mShader.activate(this.mColor.asIterable());
+        this.mShader.activate(this.mColor.asIterable(), trsMatrix);
         gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
     }
 
