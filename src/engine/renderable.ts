@@ -15,9 +15,9 @@ class Renderable {
         this.mXform = new Transform();
     }
 
-    draw():void {
+    draw(cameraMatrix: Iterable<GLfloat>):void {
         const gl = glSys.get();
-        this.mShader.activate(this.mColor, this.mXform.getTrsMatrix());
+        this.mShader.activate(this.mColor, this.mXform.getTrsMatrix(), cameraMatrix);
         gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
     }
 

@@ -8,6 +8,7 @@ class SimpleShader {
     private mVertexPositionRef: GLint;
     private mPixelColorRef: WebGLUniformLocation;
     private mModelMatrixRef: WebGLUniformLocation;
+    private mCameraMatrixRef: WebGLUniformLocation;
 
     constructor(vertexShaderID: string, fragmentShaderID: string) {
         const gl = glSys.get();
@@ -47,10 +48,14 @@ class SimpleShader {
             throw new Error("SimpleShader could not access uniform location for uModelXformMatrix.");
         }
 
+        this.mCameraMatrixRef = <WebGLUniformLocation>gl.getUniformLocation(this.mCompiledShader, "uCameraXformMatrix");
+
         this.mModelMatrixRef = modelMatrixRef;
     }
 
-    activate(pixelColor: Iterable<GLfloat>, trsMatrix: Iterable<GLfloat>): void  {
+    activate(pixelColor: Iterable<GLfloat>, 
+             trsMatrix: Iterable<GLfloat>,
+             cameraMatrix: Iterable<GLfloat>): void  {
         const gl = glSys.get();
         if (gl == null) {
             throw new Error("No WebGL2RenderingContext in SimpleShader constructor.");
@@ -68,6 +73,7 @@ class SimpleShader {
 
         gl.uniform4fv(this.mPixelColorRef, pixelColor);
         gl.uniformMatrix4fv(this.mModelMatrixRef, false, trsMatrix);
+        gl.uniformMatrix4fv(this.mCameraMatrixRef, false, cameraMatrix);
     }
 }
 
