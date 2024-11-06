@@ -4,6 +4,8 @@ import * as shaderResources from "./core/shader_resources"
 import RgbaColor from "./rgba_color";
 import Renderable from "./renderable";
 import Transform from "./transform";
+import Camera from "./camera";
+import Viewport from "./viewport";
 
 function init(htmlCanvasID:string) {
     glSys.init(htmlCanvasID);
@@ -14,17 +16,20 @@ function init(htmlCanvasID:string) {
 function clearCanvas(color: RgbaColor) {
     const gl = glSys.get();
     gl.clearColor(
-        color.getRed(),
-        color.getGreen(),
-        color.getBlue(),
-        color.getAlpha()
+        color.red,
+        color.green,
+        color.blue,
+        color.alpha
     );
     gl.clear(gl.COLOR_BUFFER_BIT);
 }
 
 export default {
+    Camera,
     Renderable,
     RgbaColor,
     Transform,
-    init, clearCanvas
+    Viewport,
+    init, 
+    clearCanvas
 }

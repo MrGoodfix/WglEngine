@@ -1,26 +1,38 @@
 class RgbaColor extends Float32Array {
-    constructor(red: GLfloat, green: GLfloat, blue: GLfloat, alpha: GLfloat) {
+    constructor(red: GLfloat, green: GLfloat, blue: GLfloat, alpha?: GLfloat) {
         super(4);
         this[0] = red;
         this[1] = green;
         this[2] = blue;
-        this[3] = alpha;
+        this[3] = alpha ?? 1;
     }
 
-    getRed():GLfloat{
+    get red():GLfloat{
         return <GLfloat>this[0];
     }
+    set red(red: GLfloat) {
+        this[0] = red;
+    }
 
-    getGreen():GLfloat{
+    get green():GLfloat{
         return <GLfloat>this[1];
     }
-
-    getBlue():GLfloat{
-        return <GLfloat>this[2];
+    set green(green: GLfloat) {
+        this[1] = green;
     }
 
-    getAlpha():GLfloat{
+    get blue():GLfloat{
+        return <GLfloat>this[2];
+    }
+    set blue(blue: GLfloat) {
+        this[2] = blue;
+    }
+
+    get alpha():GLfloat{
         return <GLfloat>this[3];
+    }
+    set alpha(alpha: GLfloat) {
+        this[3] = alpha;
     }
 
     static IndianRed = () => { return new RgbaColor(0.804, 0.361, 0.361, 1); }
@@ -154,7 +166,7 @@ class RgbaColor extends Float32Array {
     static LavenderBlush = () => { return new RgbaColor(1.000, 0.941, 0.961, 1); }
     static MistyRose = () => { return new RgbaColor(1.000, 0.894, 0.882, 1); }
     static Gainsboro = () => { return new RgbaColor(0.863, 0.863, 0.863, 1); }
-    static LightGrey = () => { return new RgbaColor(0.827, 0.827, 0.827, 1); }
+    static LightGray = () => { return new RgbaColor(0.827, 0.827, 0.827, 1); }
     static Silver = () => { return new RgbaColor(0.753, 0.753, 0.753, 1); }
     static DarkGray = () => { return new RgbaColor(0.663, 0.663, 0.663, 1); }
     static Gray = () => { return new RgbaColor(0.502, 0.502, 0.502, 1); }

@@ -5,14 +5,26 @@
 "use strict";  // Operate in Strict mode such that variables must be declared before used!
 
 import engine from "../engine/index";
-import * as glSys from "../engine/core/gl"
 import RgbaColor from "../engine/rgba_color";
-import { mat4, vec2, vec3 } from "gl-matrix";
+import { vec2 } from "gl-matrix";
 
 class MyGame {
     constructor(htmlCanvasID: string) {
         // Step A: Initialize the game engine
         engine.init(htmlCanvasID);
+
+        const viewport = new engine.Viewport(
+            20,
+            40,
+            600,
+            300
+        );
+
+        const camera = new engine.Camera(
+            vec2.fromValues(20, 60),
+            20,
+            viewport
+        );
 
         // Step B: Create renderable objects
         const blueSquare = new engine.Renderable();
@@ -37,49 +49,7 @@ class MyGame {
         const whitish: RgbaColor = new engine.RgbaColor(0.9, 0.9, 0.9, 1);
         engine.clearCanvas(whitish);
 
-        const gl = glSys.get();
-        // Step D: viewport
-        // viewport sets area to be drawn on
-        gl.viewport(
-            20,
-            40,
-            600,
-            300
-        );
-        // scissor limits the clear area
-        gl.scissor(
-            20,
-            40,
-            600,
-            300
-        );
-
-        gl.enable(gl.SCISSOR_TEST);
-        engine.clearCanvas(new RgbaColor(0.8, 0.8, 0.8, 1.0));
-        gl.disable(gl.SCISSOR_TEST);
-        // i guess scissoring is computationally expensive and that is why it is disabled after using it once.
-
-        // Step E: setup the camera matrix
-        const cameraCenter: vec2 = vec2.fromValues(20, 60);
-        // wc "world coordinates"
-        const wcSize: vec2 = vec2.fromValues(20, 10);
-
-        const cameraMatrix: mat4 = mat4.create();
-
-        mat4.scale(
-            cameraMatrix, 
-            mat4.create(), 
-            vec3.fromValues(
-                2.0 / wcSize[0],
-                2.0 / wcSize[1],
-                1.0
-            ));
-
-        mat4.translate(
-            cameraMatrix,
-            cameraMatrix,
-            vec3.fromValues(-cameraCenter[0], -cameraCenter[1], 0)
-        );
+        camera.setViewAndCameraMatrix();
 
         /*
          * World coordinates should now be set to ...
@@ -94,25 +64,25 @@ class MyGame {
         blueSquare.getXform().setPosition(20, 60);
         blueSquare.getXform().setRotationInRad(0.2);
         blueSquare.getXform().setSize(5, 5);
-        blueSquare.draw(cameraMatrix);
+        blueSquare.draw(camera);
         
         // Step G: draw center red
         redSquare.getXform().setPosition(20, 60);
         redSquare.getXform().setSize(2, 2);
-        redSquare.draw(cameraMatrix);
+        redSquare.draw(camera);
 
         // Step H: draw corners
         topLeftSquare.getXform().setPosition(10, 65);
-        topLeftSquare.draw(cameraMatrix);
+        topLeftSquare.draw(camera);
 
         topRightSquare.getXform().setPosition(30, 65);
-        topRightSquare.draw(cameraMatrix);
+        topRightSquare.draw(camera);
 
         bottomRightSquare.getXform().setPosition(30, 55);
-        bottomRightSquare.draw(cameraMatrix);
+        bottomRightSquare.draw(camera);
 
         bottomLeftSquare.getXform().setPosition(10, 55);
-        bottomLeftSquare.draw(cameraMatrix);
+        bottomLeftSquare.draw(camera);
     }
 }
 
