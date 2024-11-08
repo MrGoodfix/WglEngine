@@ -7,12 +7,23 @@
 import engine from "../engine/index";
 import RgbaColor from "../engine/rgba_color";
 import { vec2 } from "gl-matrix";
+import { SceneInterface } from "../engine/scene.interface";
+import Renderable from "../engine/renderable";
+import * as loop from "../engine/core/loop.js";
+import Camera from "../engine/camera";
 
-class MyGame {
-    constructor(htmlCanvasID: string) {
-        // Step A: Initialize the game engine
-        engine.init(htmlCanvasID);
+class MyGame implements SceneInterface {
+    private _whiteSquare: Renderable;
+    private _redSquare: Renderable;
+    private _camera: Camera|null;
 
+    constructor() {
+        this._whiteSquare = new engine.Renderable();
+        this._redSquare = new engine.Renderable();
+        this._camera = null;
+    }
+
+    init() {
         const viewport = new engine.Viewport(
             20,
             40,
@@ -20,73 +31,59 @@ class MyGame {
             300
         );
 
-        const camera = new engine.Camera(
+        this._camera = new engine.Camera(
             vec2.fromValues(20, 60),
             20,
             viewport
         );
+        this._camera.backgroundColor = RgbaColor.LightGray();
 
-        // Step B: Create renderable objects
-        const blueSquare = new engine.Renderable();
-        blueSquare.setColor(RgbaColor.DodgerBlue());
+        this._whiteSquare.setColor(RgbaColor.White());
+        this._redSquare.setColor(RgbaColor.Red());
 
-        const redSquare = new engine.Renderable();
-        redSquare.setColor(RgbaColor.FireBrick());
+        this._whiteSquare.getXform().setPosition(20, 60);
+        this._whiteSquare.getXform().setRotationInRad(0.2);
+        this._whiteSquare.getXform().setSize(5, 5);
 
-        const topLeftSquare = new engine.Renderable();
-        topLeftSquare.setColor(RgbaColor.Red());
+        this._redSquare.getXform().setPosition(20, 60);
+        this._redSquare.getXform().setSize(2, 2);
+    }
 
-        const topRightSquare = new engine.Renderable();
-        topRightSquare.setColor(RgbaColor.PaleGreen());
-
-        const bottomRightSquare = new engine.Renderable();
-        bottomRightSquare.setColor(RgbaColor.Aquamarine());
-
-        const bottomLeftSquare = new engine.Renderable();
-        bottomLeftSquare.setColor(new RgbaColor(0.1, 0.1, 0.1, 1));
-
-        // Step C: Clear the canvas
+    draw(): void {
         const whitish: RgbaColor = new engine.RgbaColor(0.9, 0.9, 0.9, 1);
         engine.clearCanvas(whitish);
-
-        camera.setViewAndCameraMatrix();
-
-        /*
-         * World coordinates should now be set to ...
-         * Center (20, 60)
-         * Top-left corner (10, 65)
-         * Top-right corner (30, 65)
-         * Bottom-right corner (30, 55)
-         * Bottom-left corner (10, 55)
-         */
-
-        // Step F: draw blue
-        blueSquare.getXform().setPosition(20, 60);
-        blueSquare.getXform().setRotationInRad(0.2);
-        blueSquare.getXform().setSize(5, 5);
-        blueSquare.draw(camera);
         
-        // Step G: draw center red
-        redSquare.getXform().setPosition(20, 60);
-        redSquare.getXform().setSize(2, 2);
-        redSquare.draw(camera);
+        if (this._camera)
+        {
+            this._camera.setViewAndCameraMatrix();
+            this._whiteSquare.draw(this._camera);
+            this._redSquare.draw(this._camera);
+        }
+    }
 
-        // Step H: draw corners
-        topLeftSquare.getXform().setPosition(10, 65);
-        topLeftSquare.draw(camera);
+    update(): void {
+        // For this very simple game, let's move the white square and pulse the red
+        const whiteXform = this._whiteSquare.getXform();
+        const deltaX:GLfloat = 0.05;
 
-        topRightSquare.getXform().setPosition(30, 65);
-        topRightSquare.draw(camera);
+        // Step A: Rorate the white square
+        if (whiteXform.getXPos() > 30) // this is the right-bound of the window
+            whiteXform.setPosition(10, 60);
+        whiteXform.incXPosBy(deltaX);
+        whiteXform.incRotationInDeg(1);
 
-        bottomRightSquare.getXform().setPosition(30, 55);
-        bottomRightSquare.draw(camera);
-
-        bottomLeftSquare.getXform().setPosition(10, 55);
-        bottomLeftSquare.draw(camera);
+        // Step B: pulse the red square
+        const redXform = this._redSquare.getXform();
+        if (redXform.getWidth() > 5)
+            redXform.setSize(2, 2);
+        redXform.incSizeBy(0.05);
     }
 }
 
 window.onload = function() {
-    // The id tag passed to the constructor tightly couples this to index.html
-    new MyGame('GLCanvas');
+    engine.init("GLCanvas");
+
+    const myGame = new MyGame();
+
+    loop.start(myGame);
 }

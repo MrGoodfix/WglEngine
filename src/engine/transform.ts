@@ -30,6 +30,10 @@ class Transform {
         this.setWidth(width);
         this.setHeight(height);
     }
+    incSizeBy(delta:GLfloat): void {
+        this.incWidthBy(delta);
+        this.incHeightBy(delta);
+    }
     getWidth = () => this._scale[0];
     setWidth(width: GLfloat) {
         this._scale[0] = width;
