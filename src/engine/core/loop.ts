@@ -1,4 +1,5 @@
 import { SceneInterface } from "../scene.interface";
+import * as input from "../input";
 
 const ups: number = 60;
 const mpf: number = 1000 / ups;
@@ -20,6 +21,13 @@ function loopOnce() {
     lagTime += elapsedTime;
 
     while ((lagTime >= mpf) && loopRunning) {
+        // TODO - it seems like a mistake to include the input.update() here
+        // considering the current implementation of the input module.
+        // It seems unlikely and not beneficial to check for a change in keyup and
+        // keydown inside a loop in a function that is running synchronously in between buffer draws.
+        // I wonder if it will be just as effective just prior to this loop 
+        // or if this loop is moved into some parallel would it be better to keep it here?
+        input.update();
         currentScene.update();
         lagTime -= mpf;
     } 

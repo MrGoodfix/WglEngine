@@ -1,16 +1,18 @@
-import * as glSys from "./core/gl"
-import * as vertexBuffer from "./core/vertex_buffer"
-import * as shaderResources from "./core/shader_resources"
+import * as glSys from "./core/gl";
+import * as input from "./input";
+import * as shaderResources from "./core/shader_resources";
+import * as vertexBuffer from "./core/vertex_buffer";
+import Camera from "./camera";
 import RgbaColor from "./rgba_color";
 import Renderable from "./renderable";
 import Transform from "./transform";
-import Camera from "./camera";
 import Viewport from "./viewport";
 
 function init(htmlCanvasID:string) {
     glSys.init(htmlCanvasID);
     vertexBuffer.init();
     shaderResources.init();
+    input.init();
 }
 
 function clearCanvas(color: RgbaColor) {
@@ -25,11 +27,14 @@ function clearCanvas(color: RgbaColor) {
 }
 
 export default {
+    input,
+
     Camera,
     Renderable,
     RgbaColor,
     Transform,
     Viewport,
+
     init, 
     clearCanvas
 }

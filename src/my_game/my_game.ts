@@ -67,16 +67,26 @@ class MyGame implements SceneInterface {
         const deltaX:GLfloat = 0.05;
 
         // Step A: Rorate the white square
-        if (whiteXform.getXPos() > 30) // this is the right-bound of the window
-            whiteXform.setPosition(10, 60);
-        whiteXform.incXPosBy(deltaX);
-        whiteXform.incRotationInDeg(1);
-
+        if  (engine.input.isKeyPressed(engine.input.keys.Right)) {
+            if (whiteXform.getXPos() > 30)  { // this is the right-bound of the window
+                whiteXform.setPosition(10, 60);
+            }
+            whiteXform.incXPosBy(deltaX);
+        }
+        
+        if (engine.input.isKeyClicked(engine.input.keys.Up)) {
+            whiteXform.incRotationInDeg(1);
+        }
+        
         // Step B: pulse the red square
         const redXform = this._redSquare.getXform();
-        if (redXform.getWidth() > 5)
-            redXform.setSize(2, 2);
-        redXform.incSizeBy(0.05);
+
+        if (engine.input.isKeyPressed(engine.input.keys.Down)) {
+            if (redXform.getWidth() > 5) {
+                redXform.setSize(2, 2);
+            }
+            redXform.incSizeBy(0.05);
+        }
     }
 }
 
