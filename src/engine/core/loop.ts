@@ -1,5 +1,6 @@
 import { SceneInterface } from "../scene.interface";
 import * as input from "../input";
+import * as map from "./resource_map"
 
 const ups: number = 60;
 const mpf: number = 1000 / ups;
@@ -33,10 +34,14 @@ function loopOnce() {
     } 
 }
 
-function start(scene: SceneInterface) {
+async function start(scene: SceneInterface) {
     if (loopRunning) {
         throw new Error("loop already running")
     }
+
+    console.log("Awaiting promises in resource map");
+    await map.waitOnPromises();
+    console.log("Resource map promises finished");
 
     currentScene = scene;
     currentScene.init(); 

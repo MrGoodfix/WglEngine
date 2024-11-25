@@ -2,6 +2,7 @@ import * as glSys from "./core/gl";
 import * as input from "./input";
 import * as shaderResources from "./core/shader_resources";
 import * as vertexBuffer from "./core/vertex_buffer";
+import * as text from "./resources/text";
 import Camera from "./camera";
 import RgbaColor from "./rgba_color";
 import Renderable from "./renderable";
@@ -28,6 +29,7 @@ function clearCanvas(color: RgbaColor) {
 
 export default {
     input,
+    text,
 
     Camera,
     Renderable,

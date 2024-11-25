@@ -1,5 +1,6 @@
 import * as glSys from "./core/gl";
 import * as vertexBuffer from "./core/vertex_buffer";
+import * as text from "./resources/text"
 
 class SimpleShader {
     private mCompiledShader: WebGLShader;
@@ -16,8 +17,8 @@ class SimpleShader {
             throw new Error("No WebGL2RenderingContext in SimpleShader constructor.");
         }
         
-        this.mVertexShader = loadAndCompileShader(vertexShaderID, gl.VERTEX_SHADER);
-        this.mFragmentShader = loadAndCompileShader(fragmentShaderID, gl.FRAGMENT_SHADER);
+        this.mVertexShader = compileShader(vertexShaderID, gl.VERTEX_SHADER);
+        this.mFragmentShader = compileShader(fragmentShaderID, gl.FRAGMENT_SHADER);
         
         const program = gl.createProgram();
         if (program == null) {
@@ -77,7 +78,7 @@ class SimpleShader {
     }
 }
 
-function loadAndCompileShader(filePath: string, shaderType: GLenum): WebGLShader {
+function compileShader(filePath: string, shaderType: GLenum): WebGLShader {
     let shaderSource: string|null = null;
     let compiledShader = null; 
     const gl = glSys.get();
@@ -85,20 +86,10 @@ function loadAndCompileShader(filePath: string, shaderType: GLenum): WebGLShader
         throw new Error("No WebGL2RenderingContext in SimpleShader.loadAndCompileShader.");
     }
     // Step A: get the shader source
-    const xmlReq = new XMLHttpRequest();
-    xmlReq.open('GET', filePath, false);
-    try {
-        xmlReq.send();
-    } catch {
-        throw new Error("Failed to load shader: "
-            + filePath
-            + " [Hint: you cannot double click to run this project. "
-            + " The index.html file must be loaded by a web server.]");
-    }
+    shaderSource = text.get(filePath);
 
-    shaderSource = xmlReq.responseText;
     if (shaderSource == null || shaderSource === undefined) {
-        throw new Error("shaderSource cannot be null or undefined");
+        throw new Error("WARNING: " + filePath + " not loaded!");
     }
     // Step B: Create the shader based on type
     compiledShader = gl.createShader(shaderType);
