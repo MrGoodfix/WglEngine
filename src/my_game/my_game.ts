@@ -6,48 +6,33 @@
 
 import engine from "../engine/index";
 import RgbaColor from "../engine/rgba_color";
-import { vec2 } from "gl-matrix";
-import { SceneInterface } from "../engine/scene.interface";
 import Renderable from "../engine/renderable";
+import SceneFileParser from "./util/scene_file_parser.js";
 import * as loop from "../engine/core/loop.js";
 import Camera from "../engine/camera";
+import { SceneInterface } from "../engine/scene.interface.js";
 
 class MyGame implements SceneInterface {
-    private _whiteSquare: Renderable|null;
-    private _redSquare: Renderable|null;
+    private _sceneFile: string;
+    private _squareSet: Renderable[];
     private _camera: Camera|null;
 
     constructor() {
-        this._whiteSquare = null;
-        this._redSquare = null;
+        this._sceneFile = "assets/scene.xml";
+        this._squareSet = [];
         this._camera = null;
     }
 
-    init() {
-        const viewport = new engine.Viewport(
-            20,
-            40,
-            600,
-            300
-        );
-
-        this._camera = new engine.Camera(
-            vec2.fromValues(20, 60),
-            20,
-            viewport
-        );
-        this._camera.backgroundColor = RgbaColor.LightGray();
-
-        this._whiteSquare = new engine.Renderable();
-        this._whiteSquare.setColor(RgbaColor.White());
-        this._whiteSquare.getXform().setPosition(20, 60);
-        this._whiteSquare.getXform().setRotationInRad(0.2);
-        this._whiteSquare.getXform().setSize(5, 5);
-
-        this._redSquare = new engine.Renderable();
-        this._redSquare.setColor(RgbaColor.Red());
-        this._redSquare.getXform().setPosition(20, 60);
-        this._redSquare.getXform().setSize(2, 2);
+    init(): void {
+        const sceneParser = new SceneFileParser(<Document>engine.xml.get(this._sceneFile));
+        this._camera = sceneParser.parseCamera();
+        console.log(`Viewport ${this._camera.viewport}, center ${this._camera.wcCenter}, width ${this._camera.wcWidth}`);
+        sceneParser.parseSquares(this._squareSet);
+        console.log("Created " + this._squareSet.length + " squares");
+        for (let i = 0; i < this._squareSet.length; i++) {
+            const sq = this._squareSet[i];
+            console.log(sq.displayText());
+        }
     }
 
     draw(): void {
@@ -57,14 +42,15 @@ class MyGame implements SceneInterface {
         if (this._camera)
         {
             this._camera.setViewAndCameraMatrix();
-            this._whiteSquare?.draw(this._camera);
-            this._redSquare?.draw(this._camera);
+            for (let i = 0; i < this._squareSet.length; i++) {
+                this._squareSet[i].draw(this._camera);
+            }
         }
     }
 
     update(): void {
         // For this very simple game, let's move the white square and pulse the red
-        const whiteXform = this._whiteSquare?.getXform();
+        const whiteXform = this._squareSet[0].getXform();
         if (whiteXform) {
             const deltaX:GLfloat = 0.05;
             // Step A: Rorate the white square
@@ -81,7 +67,7 @@ class MyGame implements SceneInterface {
         }
 
         // Step B: pulse the red square
-        const redXform = this._redSquare?.getXform();
+        const redXform = this._squareSet[1].getXform();
         if (redXform) {
             if (engine.input.isKeyPressed(engine.input.keys.Down)) {
                 if (redXform.getWidth() > 5) {
@@ -90,6 +76,14 @@ class MyGame implements SceneInterface {
                 redXform.incSizeBy(0.05);
             }
         }
+    }
+
+    load(): void {
+        engine.xml.load(this._sceneFile);
+    }
+
+    unload(): void {
+        engine.xml.unload(this._sceneFile);
     }
 }
 

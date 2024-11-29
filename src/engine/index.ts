@@ -3,6 +3,7 @@ import * as input from "./input";
 import * as shaderResources from "./core/shader_resources";
 import * as vertexBuffer from "./core/vertex_buffer";
 import * as text from "./resources/text";
+import * as xml from "./resources/xml";
 import Camera from "./camera";
 import RgbaColor from "./rgba_color";
 import Renderable from "./renderable";
@@ -30,6 +31,7 @@ function clearCanvas(color: RgbaColor) {
 export default {
     input,
     text,
+    xml,
 
     Camera,
     Renderable,

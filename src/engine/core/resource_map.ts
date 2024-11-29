@@ -1,14 +1,16 @@
+type resource = string | Document;
+
 class MapEntry {
     private _refCount: number;
 
-    constructor(private _data: string) {
+    constructor(private _data: resource) {
         this._refCount = 1;
     }
 
     decRef() { this._refCount--; }
     incRef() { this._refCount++; }
 
-    set data(data: string) {
+    set data(data: resource) {
         this._data = data;
     }
     get date() { return this._data; }
@@ -21,14 +23,14 @@ let outstandingPromises: (Promise<Response>|Promise<void>)[] = [];
 
 function has(path: string): boolean { return map.has(path); }
 
-function get(path: string): string {
+function get(path: string): resource {
     if (!has(path)) {
         throw Error("Error [" + path + "]: not loaded");
     }
     return map.get(path);
 }
 
-function set(key: string, value: string) {
+function set(key: string, value: resource) {
     console.log("Resource map set " + key);
     map.set(key, value); 
 }
@@ -69,7 +71,7 @@ function greeter(fn: (a: string) => void) {
 function loadDecodeParse(
     path: string, 
     decodeResponseResource: (p: Response) => Promise<string>, 
-    parseTextResource: (p: string) => string): Promise<void> {
+    parseTextResource: (p: string) => resource): Promise<void> {
     let fetchPromise: Promise<void>;
     if (!has(path)) {
         loadRequested(path);

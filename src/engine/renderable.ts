@@ -28,6 +28,10 @@ class Renderable {
 
     getColor():RgbaColor { return this._color; }
     setColor(color:RgbaColor):void { this._color = color;}
+
+    displayText(): string {
+        return `Square: color ${this._color}, transform [x: ${this._xform.getXPos()}, y: ${this._xform.getYPos()}, size: ${this._xform.getSize()}, rotation: ${this._xform.getRotationInDeg()}]`;
+    }
 }
 
 export default Renderable;

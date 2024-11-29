@@ -38,12 +38,13 @@ async function start(scene: SceneInterface) {
     if (loopRunning) {
         throw new Error("loop already running")
     }
+    currentScene = scene;
+    currentScene.load();
 
     console.log("Awaiting promises in resource map");
     await map.waitOnPromises();
     console.log("Resource map promises finished");
 
-    currentScene = scene;
     currentScene.init(); 
 
     prevTime = performance.now();
