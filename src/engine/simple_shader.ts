@@ -76,6 +76,15 @@ class SimpleShader {
         gl.uniformMatrix4fv(this.mModelMatrixRef, false, trsMatrix);
         gl.uniformMatrix4fv(this.mCameraMatrixRef, false, cameraMatrix);
     }
+
+    cleanUp() {
+        const gl = glSys.get();
+        gl.detachShader(this.mCompiledShader, this.mVertexShader);
+        gl.detachShader(this.mCompiledShader, this.mFragmentShader);
+        gl.deleteShader(this.mVertexShader);
+        gl.deleteShader(this.mFragmentShader);
+        gl.deleteProgram(this.mCompiledShader);
+    }
 }
 
 function compileShader(filePath: string, shaderType: GLenum): WebGLShader {
@@ -86,7 +95,7 @@ function compileShader(filePath: string, shaderType: GLenum): WebGLShader {
         throw new Error("No WebGL2RenderingContext in SimpleShader.loadAndCompileShader.");
     }
     // Step A: get the shader source
-    shaderSource = text.get(filePath);
+    shaderSource = <string>text.get(filePath);
 
     if (shaderSource == null || shaderSource === undefined) {
         throw new Error("WARNING: " + filePath + " not loaded!");

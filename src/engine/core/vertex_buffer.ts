@@ -21,4 +21,11 @@ function init(): void {
     }
 }
 
-export {init, get}
+function cleanUp() {
+    if (mGLVertexBuffer !== null) {
+        glSys.get().deleteBuffer(mGLVertexBuffer);
+        mGLVertexBuffer = null;
+    }
+}
+
+export {init, get, cleanUp}

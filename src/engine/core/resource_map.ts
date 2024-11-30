@@ -13,71 +13,61 @@ class MapEntry {
     set data(data: resource) {
         this._data = data;
     }
-    get date() { return this._data; }
+    get data() { return this._data; }
 
     canRemove(): boolean { return (this._refCount == 0); }
 }
 
-const map = new Map();
+const resMap = new Map<string, MapEntry>();
 let outstandingPromises: (Promise<Response>|Promise<void>)[] = [];
 
-function has(path: string): boolean { return map.has(path); }
+function has(path: string): boolean { return resMap.has(path); }
 
 function get(path: string): resource {
     if (!has(path)) {
         throw Error("Error [" + path + "]: not loaded");
     }
-    return map.get(path);
+    return <resource>resMap.get(path)?.data;
 }
 
 function set(key: string, value: resource) {
     console.log("Resource map set " + key);
-    map.set(key, value); 
+    const entry = resMap.get(key);
+    if (entry) {
+        entry.data = value;
+    }
 }
-
-/*
-function set(key, value) { 
-    mMap.get(key).set(value);
-}
-*/
 
 function loadRequested(path: string) {
-    map.set(path, new MapEntry(""));
+    console.log(`Setting map for ${path}`);
+    resMap.set(path, new MapEntry(""));
+    resMap.forEach((value: MapEntry, key: string) => {
+        console.log(key, value);
+    });
 }
 
 function incRef(path: string) {
-    map.get(path).incRef();
-}
-
-function unload(path: string): boolean {
-    const entry = map.get(path);
-    entry.decRef();
-    if (entry.canRemove()) {
-        map.delete(path);
-    }
-    return entry.canRemove();
+    console.log(`Incrementing map for ${path}`);
+    resMap.get(path)?.incRef();
+    resMap.forEach((value: MapEntry, key: string) => {
+        console.log(key, value);
+    });
 }
 
 function pushPromise(p: (Promise<Response>|Promise<void>)) {
     outstandingPromises.push(p);
 }
 
-/*
-function greeter(fn: (a: string) => void) {
-  fn("Hello, World");
-}
-*/
-
 function loadDecodeParse(
     path: string, 
-    decodeResponseResource: (p: Response) => Promise<string>, 
-    parseTextResource: (p: string) => resource): Promise<void> {
+    decodeResource: (p: Response) => Promise<string>, 
+    parseResource: (p: string) => resource): Promise<void> {
     let fetchPromise: Promise<void>;
     if (!has(path)) {
         loadRequested(path);
         fetchPromise = fetch(path)
-            .then(res => decodeResponseResource(res))
-            .then(data => parseTextResource(data))
+            .then(res => decodeResource(res))
+            .then(data => parseResource(data))
             .then(parsed => { return set(path, parsed) })
             .catch(err => { throw err });
         pushPromise(fetchPromise);
@@ -86,6 +76,27 @@ function loadDecodeParse(
         incRef(path); // increase the reference count
     }
     return Promise.resolve();
+}
+
+function unload(path: string): boolean {
+    console.log(`Unloading map for ${path}`);
+    console.log(JSON.stringify(resMap));
+    resMap.forEach((value: MapEntry, key: string) => {
+        console.log(key, value);
+    });
+    console.log(`Map has ${path}: ${resMap.has(path)}`);
+    const entry = <MapEntry>resMap.get(path);
+    if (entry) {
+        console.log(JSON.stringify(entry));
+        entry.decRef();
+        if (entry.canRemove()) {
+            resMap.delete(path);
+        }
+        return entry.canRemove();
+    }
+    else {
+        throw console.error(`Could not find map entry for ${path}`);
+    }
 }
 
 async function waitOnPromises() {

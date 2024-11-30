@@ -86,10 +86,13 @@ function update() {
     }
 }
 
+function cleanUp() { }
+
 export{
     keys,
     init,
     update,
     isKeyClicked,
-    isKeyPressed
+    isKeyPressed,
+    cleanUp
 };

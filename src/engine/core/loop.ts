@@ -8,13 +8,13 @@ const mpf: number = 1000 / ups;
 let prevTime: DOMHighResTimeStamp;
 let lagTime: number;
 let loopRunning: boolean = false;
-let currentScene: SceneInterface;
+let currentScene: SceneInterface|null;
 let frameId: number = -1;
 
 function loopOnce() {
     frameId = requestAnimationFrame(loopOnce);
 
-    currentScene.draw();
+    currentScene?.draw();
 
     const currentTime: number = performance.now(); // timestamp in milliseconds
     const elapsedTime: number = currentTime - prevTime;
@@ -29,7 +29,7 @@ function loopOnce() {
         // I wonder if it will be just as effective just prior to this loop 
         // or if this loop is moved into some parallel would it be better to keep it here?
         input.update();
-        currentScene.update();
+        currentScene?.update();
         lagTime -= mpf;
     } 
 }
@@ -59,4 +59,12 @@ function stop(): void {
     cancelAnimationFrame(frameId);
 }
 
-export {start, stop}
+function cleanUp(): void {
+    if (loopRunning) {
+        stop();
+        currentScene?.unload();
+        currentScene = null;
+    }
+}
+
+export {start, stop, cleanUp}
