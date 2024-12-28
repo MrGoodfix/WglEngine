@@ -1,3 +1,4 @@
+import { Resource } from "../core/resource";
 import * as map from "../core/resource_map";
 
 const unload = map.unload;
@@ -6,12 +7,12 @@ const get = map.get;
 
 const parser = new DOMParser();
 
-function decodeXML(data: Response): Promise<string> {
+function decodeXML(data: Response): Promise<Resource> {
     return data.text();
 }
 
-function parseXML(text: string): Document {
-    return parser.parseFromString(text, "text/xml");
+function parseXML(text: Resource): Resource {
+    return parser.parseFromString(<string>text, "text/xml");
 }
 
 function load(path: string): Promise<void> {

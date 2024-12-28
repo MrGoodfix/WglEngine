@@ -10,9 +10,15 @@ class MyGame extends engine.Scene {
     private _camera: Camera|null;
     private _hero: Renderable|null;
     private _support: Renderable|null;
+    private _backgroundAudio: string;
+    private _cue: string;
 
     constructor() {
         super();
+
+        this._backgroundAudio = "assets/sounds/bg_clip.mp3";
+        this._cue = "assets/sounds/my_game_cue.wav";
+
         this._camera = null;
         this._hero = null;
         this._support = null;
@@ -38,6 +44,9 @@ class MyGame extends engine.Scene {
         this._hero.setColor(new RgbaColor(0, 0, 1, 1));
         this._hero.getXform().setPosition(20, 60);
         this._hero.getXform().setSize(2, 3);
+
+        engine.audio.playBackground(this._backgroundAudio, 1.0);
+
     }
 
     draw(): void {
@@ -65,6 +74,8 @@ class MyGame extends engine.Scene {
 
             // Support hero movements
             if (engine.input.isKeyPressed(engine.input.keys.Right)) {
+                engine.audio.playCue(this._cue, 0.5);
+                engine.audio.incBackgroundVolume(0.05);
                 xform.incXPosBy(deltaX);
                 if (xform.getXPos() > 30) { // this is the right-bound of the window
                     xform.setPosition(12, 60);
@@ -72,6 +83,8 @@ class MyGame extends engine.Scene {
             }
 
             if (engine.input.isKeyPressed(engine.input.keys.Left)) {
+                engine.audio.playCue(this._cue, 1.5);
+                engine.audio.incBackgroundVolume(-0.05);
                 xform.incXPosBy(-deltaX);
                 if (xform.getXPos() < 11) {  // this is the left-bound of the window
                     this.next(); 
@@ -91,11 +104,14 @@ class MyGame extends engine.Scene {
     }
 
     load(): void {
-        
+        engine.audio.load(this._backgroundAudio);
+        engine.audio.load(this._cue);
     }
 
     unload(): void {
-        
+        engine.audio.stopBackground();
+        engine.audio.unload(this._backgroundAudio);
+        engine.audio.unload(this._cue);
     }
 }
 

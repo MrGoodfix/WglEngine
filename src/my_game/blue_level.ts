@@ -9,9 +9,14 @@ class BlueLevel extends engine.Scene {
     private mSceneFile: string;
     private mSQSet: Renderable[];
     private mCamera: Camera|null;
+    private _backgroundAudio: string;
+    private _cue: string;
 
     constructor() {
         super();
+
+        this._backgroundAudio = "assets/sounds/bg_clip.mp3";
+        this._cue = "assets/sounds/blue_level_cue.wav";
 
         // scene file name
         this.mSceneFile = "assets/blue_level.xml";
@@ -30,14 +35,22 @@ class BlueLevel extends engine.Scene {
 
         // Step B: Read all the squares
         sceneParser.parseSquares(this.mSQSet);
+
+        engine.audio.playBackground(this._backgroundAudio, 0.5);
     }
 
     override load(): void {
         engine.xml.load(this.mSceneFile);
+        engine.audio.load(this._backgroundAudio);
+        engine.audio.load(this._cue);
     }
 
     override unload(): void {
+        engine.audio.stopBackground();
+
         engine.xml.unload(this.mSceneFile);
+        engine.audio.unload(this._backgroundAudio);
+        engine.audio.unload(this._cue);
     }
 
     override draw(): void {
@@ -59,6 +72,7 @@ class BlueLevel extends engine.Scene {
 
         // Move right and swap over
         if (engine.input.isKeyPressed(engine.input.keys.Right)) {
+            engine.audio.playCue(this._cue, 0.5);
             xform.incXPosBy(deltaX);
             if (xform.getXPos() > 30) { // this is the right-bound of the window
                 xform.setPosition(12, 60);
@@ -67,6 +81,7 @@ class BlueLevel extends engine.Scene {
 
         // test for white square movement
         if (engine.input.isKeyPressed(engine.input.keys.Left)) {
+            engine.audio.playCue(this._cue, 1.0);
             xform.incXPosBy(-deltaX);
             if (xform.getXPos() < 11) { // this is the left-boundary
                 this.next(); // go back to my game

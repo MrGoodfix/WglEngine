@@ -1,4 +1,5 @@
 import * as glSys from "./core/gl";
+import * as audio from "./resources/audio";
 import * as input from "./input";
 import * as loop from "./core/loop";
 import * as shaderResources from "./core/shader_resources";
@@ -17,6 +18,7 @@ function init(htmlCanvasID:string) {
     vertexBuffer.init();
     shaderResources.init();
     input.init();
+    audio.init();
 }
 
 function clearCanvas(color: RgbaColor) {
@@ -33,6 +35,7 @@ function clearCanvas(color: RgbaColor) {
 function cleanUp() {
     loop.cleanUp();
     input.cleanUp();
+    audio.cleanUp();
     shaderResources.cleanUp();
     vertexBuffer.cleanUp();
     glSys.cleanUp();
@@ -42,6 +45,7 @@ export default {
     input,
     text,
     xml,
+    audio,
 
     Camera,
     Renderable,
