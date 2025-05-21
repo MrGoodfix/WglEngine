@@ -1,15 +1,15 @@
-import * as glSys from "./core/gl";
-import * as vertexBuffer from "./core/vertex_buffer";
-import * as text from "./resources/text"
+import * as glSys from "../core/gl";
+import * as vertexBuffer from "../core/vertex_buffer";
+import * as text from "../resources/text"
 
 class SimpleShader {
-    private mCompiledShader: WebGLShader;
-    private mVertexShader: WebGLShader;
-    private mFragmentShader: WebGLShader;
-    private mVertexPositionRef: GLint;
-    private mPixelColorRef: WebGLUniformLocation;
-    private mModelMatrixRef: WebGLUniformLocation;
-    private mCameraMatrixRef: WebGLUniformLocation;
+    protected mCompiledShader: WebGLShader;
+    protected mVertexShader: WebGLShader;
+    protected mFragmentShader: WebGLShader;
+    protected mVertexPositionRef: GLint;
+    protected mPixelColorRef: WebGLUniformLocation;
+    protected mModelMatrixRef: WebGLUniformLocation;
+    protected mCameraMatrixRef: WebGLUniformLocation;
 
     constructor(vertexShaderID: string, fragmentShaderID: string) {
         const gl = glSys.get();
@@ -59,7 +59,7 @@ class SimpleShader {
              cameraMatrix: Iterable<GLfloat>): void  {
         const gl = glSys.get();
         if (gl == null) {
-            throw new Error("No WebGL2RenderingContext in SimpleShader constructor.");
+            throw new Error("No WebGL2RenderingContext in SimpleShader activate.");
         }
         gl.useProgram(this.mCompiledShader);
 

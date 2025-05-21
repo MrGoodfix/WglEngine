@@ -1,9 +1,9 @@
-import Camera from "./camera";
-import * as glSys from "./core/gl"
-import * as shaderResources from "./core/shader_resources"
-import RgbaColor from "./rgba_color";
-import SimpleShader from "./simple_shader";
-import Transform from "./transform";
+import Camera from "../camera";
+import * as glSys from "../core/gl"
+import * as shaderResources from "../core/shader_resources"
+import RgbaColor from "../rgba_color";
+import SimpleShader from "../shaders/simple_shader";
+import Transform from "../transform";
 
 class Renderable {
     private _shader: SimpleShader;
@@ -15,6 +15,8 @@ class Renderable {
         this._color = new RgbaColor(1,1,1,1);
         this._xform = new Transform();
     }
+
+    _setShader(s: SimpleShader) { this._shader = s; }
 
     draw(camera: Camera):void {
         const gl = glSys.get();

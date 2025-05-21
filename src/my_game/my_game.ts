@@ -1,27 +1,30 @@
 import engine from "../engine/index";
 import RgbaColor from "../engine/rgba_color";
-import Renderable from "../engine/renderable";
+import Renderable from "../engine/renderables/renderable.js";
 import Camera from "../engine/camera";
 import BlueLevel from "./blue_level.js";
 import { vec2 } from "gl-matrix";
 import Viewport from "../engine/viewport.js";
 
 class MyGame extends engine.Scene {
+    private _portalPath: string;
+    private _collectorPath: string;
     private _camera: Camera|null;
     private _hero: Renderable|null;
-    private _support: Renderable|null;
-    private _backgroundAudio: string;
-    private _cue: string;
+    private _portal: Renderable|null;
+    private _collector: Renderable|null;
 
     constructor() {
         super();
 
-        this._backgroundAudio = "assets/sounds/bg_clip.mp3";
-        this._cue = "assets/sounds/my_game_cue.wav";
+        // textures
+        this._portalPath = "assets/minion_portal.png";
+        this._collectorPath = "assets/minion_collector.png";
 
         this._camera = null;
         this._hero = null;
-        this._support = null;
+        this._portal = null;
+        this._collector = null;
     }
 
     init(): void {
@@ -33,20 +36,21 @@ class MyGame extends engine.Scene {
         );
         this._camera.backgroundColor = new RgbaColor(0.8, 0.8, 0.8, 1);
 
-        // Step B: Create the support object in red
-        this._support = new engine.Renderable();
-        this._support.setColor(new RgbaColor(0.8, 0.2, 0.2, 1));
-        this._support.getXform().setPosition(20, 60);
-        this._support.getXform().setSize(5, 5);
+        // Step B: Create the game objects
+        this._portal = new engine.TextureRenderable(this._portalPath);
+        this._portal.setColor(new RgbaColor(1, 0, 0, 0.2));
+        this._portal.getXform().setPosition(25, 60);
+        this._portal.getXform().setSize(3, 3);
 
-        // Setp C: Create the hero object in blue
+        this._collector = new engine.TextureRenderable(this._collectorPath);
+        this._collector.setColor(new RgbaColor(0, 0, 0, 0));
+        this._collector.getXform().setPosition(15, 60);
+        this._collector.getXform().setSize(3, 3);
+
         this._hero = new engine.Renderable();
         this._hero.setColor(new RgbaColor(0, 0, 1, 1));
         this._hero.getXform().setPosition(20, 60);
         this._hero.getXform().setSize(2, 3);
-
-        engine.audio.playBackground(this._backgroundAudio, 1.0);
-
     }
 
     draw(): void {
@@ -59,8 +63,9 @@ class MyGame extends engine.Scene {
             this._camera.setViewAndCameraMatrix();
 
             // Step  C: draw everything
-            this._support?.draw(this._camera);
+            this._portal?.draw(this._camera);
             this._hero?.draw(this._camera);
+            this._collector?.draw(this._camera);
         }
     }
 
@@ -74,8 +79,6 @@ class MyGame extends engine.Scene {
 
             // Support hero movements
             if (engine.input.isKeyPressed(engine.input.keys.Right)) {
-                engine.audio.playCue(this._cue, 0.5);
-                engine.audio.incBackgroundVolume(0.05);
                 xform.incXPosBy(deltaX);
                 if (xform.getXPos() > 30) { // this is the right-bound of the window
                     xform.setPosition(12, 60);
@@ -83,16 +86,19 @@ class MyGame extends engine.Scene {
             }
 
             if (engine.input.isKeyPressed(engine.input.keys.Left)) {
-                engine.audio.playCue(this._cue, 1.5);
-                engine.audio.incBackgroundVolume(-0.05);
                 xform.incXPosBy(-deltaX);
                 if (xform.getXPos() < 11) {  // this is the left-bound of the window
                     this.next(); 
                 }
             }
         }
-        if (engine.input.isKeyPressed(engine.input.keys.Q))
-            this.stop();  // Quit the game
+
+        const c = <RgbaColor>this._portal?.getColor();
+        let ca = c[3] + deltaX;
+        if (ca > 1) {
+            ca = 0;
+        }
+        c[3] = ca;
     }
 
     override next() {      
@@ -104,14 +110,13 @@ class MyGame extends engine.Scene {
     }
 
     load(): void {
-        engine.audio.load(this._backgroundAudio);
-        engine.audio.load(this._cue);
+        engine.texture.load(this._portalPath);
+        engine.texture.load(this._collectorPath);
     }
 
     unload(): void {
-        engine.audio.stopBackground();
-        engine.audio.unload(this._backgroundAudio);
-        engine.audio.unload(this._cue);
+        engine.texture.unload(this._portalPath);
+        engine.texture.unload(this._collectorPath);
     }
 }
 

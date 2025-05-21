@@ -3,15 +3,16 @@ import engine from "../../engine/index";
 import Viewport from "../../engine/viewport";
 import Camera from "../../engine/camera";
 import RgbaColor from "../../engine/rgba_color";
-import Renderable from "../../engine/renderable";
+import Renderable from "../../engine/renderables/renderable";
 
 class SceneFileParser {
-    constructor(private xml:Document) {
-        
+    private _xml: Document;
+    constructor(sceneFilePath: string) {
+        this._xml = <Document>engine.text.get(sceneFilePath);
     }
 
     parseCamera(): Camera {
-        const cameraElements = this.getElement(this.xml, "Camera");
+        const cameraElements = this.getElement("Camera");
         const cameraElement = cameraElements[0];
 
         const centerX = Number(cameraElement.getAttribute("CenterX"));
@@ -35,7 +36,7 @@ class SceneFileParser {
     }
 
     parseSquares(sqSet: Renderable[]) {
-        const squareElements = this.getElement(this.xml, "Square");
+        const squareElements = this.getElement("Square");
         console.log("parsing " + squareElements.length + " two square tags and their attributes");
         let squareElement: Element;
         let x: GLfloat = 0;
@@ -66,8 +67,35 @@ class SceneFileParser {
         }
     }
 
-    getElement(xmlContent: Document, tagName: string): HTMLCollectionOf<Element> {
-        const element = xmlContent.getElementsByTagName(tagName);
+    parseTextureSquares(sqSet: Renderable[]) {
+        const textureElements = this.getElement("TextureSquare");
+        console.log("parsing " + textureElements.length + " two square tags and their attributes");
+        let textureElement: Element;
+        let i, x, y, width, height, rotation, colorArray, textureName, texture;
+        for (i = 0; i < textureElements.length; i++) {
+            console.log("reading texture tag " + i);
+            textureElement = <Element>textureElements.item(i);
+            x = Number(textureElement.attributes.getNamedItem("PosX")?.value);
+            y = Number(textureElement.attributes.getNamedItem("PosY")?.value);
+            width = Number(textureElement.attributes.getNamedItem("Width")?.value);
+            height = Number(textureElement.attributes.getNamedItem("Height")?.value);
+            rotation = Number(textureElement.attributes.getNamedItem("Rotation")?.value);
+            colorArray = textureElement.attributes.getNamedItem("Color")?.value.split(" ").map(Number);
+            textureName = <string>textureElement.attributes.getNamedItem("Texture")?.value;
+            texture = new engine.TextureRenderable(textureName);
+            // make sure color array contains numbers
+            if (colorArray) {
+                texture.setColor(new RgbaColor(colorArray[0], colorArray[1], colorArray[2], colorArray[3]));
+                texture.getXform().setPosition(x, y);
+                texture.getXform().setRotationInDeg(rotation); // In Degree
+                texture.getXform().setSize(width, height);
+                sqSet.push(texture);
+            }
+        }
+    }
+
+    getElement(tagName: string): HTMLCollectionOf<Element> {
+        const element = this._xml.getElementsByTagName(tagName);
         if (element.length === 0) {
             console.error("Warning: Level element:[" + tagName + "]: is not found!");
         }
